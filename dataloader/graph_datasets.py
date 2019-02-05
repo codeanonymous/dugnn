@@ -15,20 +15,6 @@ import time
 import logging
 
 
-# graph_dataset_names = ['Synthie', 'Peking_1', 'OHSU', 'MSRC_21C', 'MSRC_21', 'MSRC_9', 'Mutagenicity', 'KKI', 'ER_MD', 'DHFR_MD', 'DHFR', 'FRANKENSTEIN', 'COX2_MD', 'COX2', 'BZR_MD', 'BZR', 'AIDS', 'COIL-DEL',
-#                        'IMDB-BINARY', 'IMDB-MULTI', 'MUTAG', 'NCI1', 'NCI109', 'PROTEINS', 'PTC_FM', 'PTC_FR', 'PTC_MM', 'PTC_MR', 'COLLAB', 'DD', 'ENZYMES', 'REDDIT-BINARY', 'REDDIT-MULTI-5K', 'REDDIT-MULTI-12K']
-
-
-# graph_dataset_names = ['IMDB-BINARY', 'IMDB-MULTI', 'MUTAG', 'NCI1', 'NCI109', 'PROTEINS', 'PTC_FM', 'PTC_FR', 'PTC_MM', 'PTC_MR', 'COLLAB', 'DD', 'ENZYMES', 'REDDIT-BINARY', 'REDDIT-MULTI-5K', 'REDDIT-MULTI-12K']
-graph_dataset_names = ['NCI1', 'NCI109']
-# graph_dataset_names = ['IMDB-BINARY', 'IMDB-MULTI', 'COLLAB', 'REDDIT-BINARY', 'REDDIT-MULTI-5K', 'REDDIT-MULTI-12K']
-
-
-def maybe_log(path, log=True):
-    if log:
-        print('Extracting', path)
-
-
 def extract_tar(path, folder, mode='r:gz', log=True):
     maybe_log(path, log)
     with tarfile.open(path, mode) as f:
