@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.nn import Sequential, Linear, ReLU
 import torch.nn.functional as F
-from torch_dgl.models.model_graphconv import GraphEncoder
+from torch_dgl.models.universal_graph_encoder import GraphEncoder
 from config.params_universal_graph_embedding_model import B, N, E, D, H, C, K
 from torch_dgl.layers.ugd_input_layer import InputTransformer
 
