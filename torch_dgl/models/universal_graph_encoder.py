@@ -3,7 +3,7 @@ from torch import nn
 from torch.nn import Sequential, Linear, ReLU
 from torch_dgl.layers.graph_capsule_layer import GraphCapsuleConv
 import torch.nn.functional as F
-from config.params_gin_model import B, N, E, D, H, C
+from config.params_universal_graph_embedding_model import B, N, E, D, H, C
 
 
 class GraphEncoder(nn.Module):
