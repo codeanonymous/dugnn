@@ -2,7 +2,6 @@ from scipy import sparse
 import numpy as np
 import time
 from fast_histogram import histogram1d
-from utils.ginv import ginv
 import matlab.engine
 
 eng = matlab.engine.start_matlab()
