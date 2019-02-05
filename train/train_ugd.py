@@ -165,7 +165,7 @@ def compute_loss(logits, labels, kernel_pred, kernel_true, fgsd_kernel_pred=None
 
 
 def train_per_epoch():
-    global best_test_loss, best_acc_test, best_acc_test_loss
+    global best_validation_loss, best_acc_validation, best_acc_validation_loss
 
     t = time.time()
     model.train()
@@ -231,52 +231,52 @@ def train_per_epoch():
     loss_adj_reconst_train_per_sample = total_adj_reconst_loss / num_batches
 
     # loss_train_per_sample, loss_train_class_per_sample, loss_kernel_train_per_sample, loss_fgsd_kernel_train_per_sample, loss_spk_kernel_train_per_sample, loss_adj_reconst_train_per_sample, acc_train, X_train, Y_train = eval_model(train_loader)
-    loss_test_per_sample, loss_test_class_per_sample, loss_kernel_test_per_sample, loss_fgsd_kernel_test_per_sample, loss_spk_kernel_test_per_sample, loss_adj_reconst_test_per_sample, acc_test, X_test, Y_test = eval_model(test_loader)
+    loss_validation_per_sample, loss_validation_class_per_sample, loss_kernel_validation_per_sample, loss_fgsd_kernel_validation_per_sample, loss_spk_kernel_validation_per_sample, loss_adj_reconst_validation_per_sample, acc_validation, X_validation, Y_validation = eval_model(validation_loader)
 
     X_train = np.concatenate(X_train)
     Y_train = np.concatenate(Y_train)
-    X_test = np.concatenate(X_test)
-    Y_test = np.concatenate(Y_test)
+    X_validation = np.concatenate(X_validation)
+    Y_validation = np.concatenate(Y_validation)
 
     if args.use_svm_classifier:
         clf = svm.SVC(C=1, gamma='scale', class_weight='balanced')
         clf.fit(X_train, Y_train)
-        Y_pred = clf.predict(X_test)
-        acc_test = accuracy_score(Y_test, Y_pred)
+        Y_pred = clf.predict(X_validation)
+        acc_validation = accuracy_score(Y_validation, Y_pred)
         Y_pred = clf.predict(X_train)
         acc_train = accuracy_score(Y_train, Y_pred)
 
-    if best_acc_test < acc_test:
-        best_acc_test = acc_test
-    if best_test_loss > loss_test_per_sample:
-        best_test_loss = loss_test_per_sample
-        best_acc_test_loss = acc_test
+    if best_acc_validation < acc_validation:
+        best_acc_validation = acc_validation
+    if best_validation_loss > loss_validation_per_sample:
+        best_validation_loss = loss_validation_per_sample
+        best_acc_validation_loss = acc_validation
 
-    writer.add_scalars('acc/best', {'best_acc_test_loss': best_acc_test_loss, 'best_acc_test': best_acc_test}, epoch + 1)
-    writer.add_scalars('acc', {'acc_train': acc_train, 'acc_test': acc_test}, epoch + 1)
-    writer.add_scalars('loss/loss_total', {'loss_train_per_sample': loss_train_per_sample, 'loss_test_per_sample': loss_test_per_sample}, epoch + 1)
-    writer.add_scalars('loss/loss_wl', {'loss_kernel_train_per_sample': loss_kernel_train_per_sample, 'loss_kernel_test_per_sample': loss_kernel_test_per_sample}, epoch + 1)
-    writer.add_scalars('loss/loss_fgsd', {'loss_fgsd_kernel_train_per_sample': loss_fgsd_kernel_train_per_sample, 'loss_fgsd_kernel_test_per_sample': loss_fgsd_kernel_test_per_sample}, epoch + 1)
-    writer.add_scalars('loss/loss_spk', {'loss_spk_kernel_train_per_sample': loss_spk_kernel_train_per_sample, 'loss_spk_kernel_test_per_sample': loss_spk_kernel_test_per_sample}, epoch + 1)
-    writer.add_scalars('loss/loss_adj', {'loss_adj_reconst_train_per_sample': loss_adj_reconst_train_per_sample, 'loss_adj_reconst_test_per_sample': loss_adj_reconst_test_per_sample}, epoch + 1)
+    writer.add_scalars('acc/best', {'best_acc_validation_loss': best_acc_validation_loss, 'best_acc_validation': best_acc_validation}, epoch + 1)
+    writer.add_scalars('acc', {'acc_train': acc_train, 'acc_validation': acc_validation}, epoch + 1)
+    writer.add_scalars('loss/loss_total', {'loss_train_per_sample': loss_train_per_sample, 'loss_validation_per_sample': loss_validation_per_sample}, epoch + 1)
+    writer.add_scalars('loss/loss_wl', {'loss_kernel_train_per_sample': loss_kernel_train_per_sample, 'loss_kernel_validation_per_sample': loss_kernel_validation_per_sample}, epoch + 1)
+    writer.add_scalars('loss/loss_fgsd', {'loss_fgsd_kernel_train_per_sample': loss_fgsd_kernel_train_per_sample, 'loss_fgsd_kernel_validation_per_sample': loss_fgsd_kernel_validation_per_sample}, epoch + 1)
+    writer.add_scalars('loss/loss_spk', {'loss_spk_kernel_train_per_sample': loss_spk_kernel_train_per_sample, 'loss_spk_kernel_validation_per_sample': loss_spk_kernel_validation_per_sample}, epoch + 1)
+    writer.add_scalars('loss/loss_adj', {'loss_adj_reconst_train_per_sample': loss_adj_reconst_train_per_sample, 'loss_adj_reconst_validation_per_sample': loss_adj_reconst_validation_per_sample}, epoch + 1)
 
     logging.info('Epoch: {:04d}'.format(epoch + 1) +
                  ' acc_train: {:.4f}'.format(acc_train) +
-                 ' acc_test: {:.4f}'.format(acc_test) +
-                 ' best_acc_test: {:.4f}'.format(best_acc_test) +
-                 ' best_acc_test_loss: {:.4f}'.format(best_acc_test_loss) +
+                 ' acc_validation: {:.4f}'.format(acc_validation) +
+                 ' best_acc_validation: {:.4f}'.format(best_acc_validation) +
+                 ' best_acc_validation_loss: {:.4f}'.format(best_acc_validation_loss) +
                  ' loss_train: {:08.5f}'.format(loss_train_per_sample) +
                  ' loss_class_train: {:08.5f}'.format(loss_train_class_per_sample) +
                  ' loss_kernel_train: {:08.5f}'.format(loss_kernel_train_per_sample) +
                  ' loss_fgsd_kernel_train: {:08.5f}'.format(loss_fgsd_kernel_train_per_sample) +
                  ' loss_spk_kernel_train: {:08.5f}'.format(loss_spk_kernel_train_per_sample) +
                  ' loss_adj_reconst_train: {:08.5f}'.format(loss_adj_reconst_train_per_sample) +
-                 ' loss_test: {:08.5f}'.format(loss_test_per_sample) +
-                 ' loss_class_test: {:08.5f}'.format(loss_test_class_per_sample) +
-                 ' loss_kernel_test: {:08.5f}'.format(loss_kernel_test_per_sample) +
-                 ' loss_fgsd_kernel_test: {:08.5f}'.format(loss_fgsd_kernel_test_per_sample) +
-                 ' loss_spk_kernel_test: {:08.5f}'.format(loss_spk_kernel_test_per_sample) +
-                 ' loss_adj_reconst_test: {:08.5f}'.format(loss_adj_reconst_test_per_sample) +
+                 ' loss_validation: {:08.5f}'.format(loss_validation_per_sample) +
+                 ' loss_class_validation: {:08.5f}'.format(loss_validation_class_per_sample) +
+                 ' loss_kernel_validation: {:08.5f}'.format(loss_kernel_validation_per_sample) +
+                 ' loss_fgsd_kernel_validation: {:08.5f}'.format(loss_fgsd_kernel_validation_per_sample) +
+                 ' loss_spk_kernel_validation: {:08.5f}'.format(loss_spk_kernel_validation_per_sample) +
+                 ' loss_adj_reconst_validation: {:08.5f}'.format(loss_adj_reconst_validation_per_sample) +
                  ' lr: {:.2e}'.format(optimizer.param_groups[0]['lr']) +
                  ' batch_prep_time: {:.4f}s'.format(total_batch_prep_time) +
                  ' crossval_split: {:04d}'.format(args.crossval_split) +
@@ -292,18 +292,18 @@ def train_per_epoch():
         experiment.log_metric("loss_spk_kernel_train", float('{:.4f}'.format(loss_spk_kernel_train_per_sample)), step=epoch)
         experiment.log_metric("loss_adj_reconst_train", float('{:.4f}'.format(loss_adj_reconst_train_per_sample)), step=epoch)
 
-    with experiment.test():
-        experiment.log_metric("loss", loss_test_per_sample, step=epoch)
-        experiment.log_metric("accuracy", float('{:.4f}'.format(acc_test)), step=epoch)
-        experiment.log_metric("best_acc", float('{:.4f}'.format(best_acc_test)), step=epoch)
-        experiment.log_metric("loss_best_acc", float('{:.4f}'.format(best_acc_test_loss)), step=epoch)
+    with experiment.validation():
+        experiment.log_metric("loss", loss_validation_per_sample, step=epoch)
+        experiment.log_metric("accuracy", float('{:.4f}'.format(acc_validation)), step=epoch)
+        experiment.log_metric("best_acc", float('{:.4f}'.format(best_acc_validation)), step=epoch)
+        experiment.log_metric("loss_best_acc", float('{:.4f}'.format(best_acc_validation_loss)), step=epoch)
         experiment.log_metric("epoch", float('{:04d}'.format(epoch + 1)), step=epoch)
-        experiment.log_metric("loss_test", float('{:.4f}'.format(loss_test_per_sample)), step=epoch)
-        experiment.log_metric("loss_class_test", float('{:.4f}'.format(loss_test_class_per_sample)), step=epoch)
-        experiment.log_metric("loss_kernel_test", float('{:.4f}'.format(loss_kernel_test_per_sample)), step=epoch)
-        experiment.log_metric("loss_fgsd_kernel_test", float('{:.4f}'.format(loss_fgsd_kernel_test_per_sample)), step=epoch)
-        experiment.log_metric("loss_spk_kernel_test", float('{:.4f}'.format(loss_spk_kernel_test_per_sample)), step=epoch)
-        experiment.log_metric("loss_adj_reconst_test", float('{:.4f}'.format(loss_adj_reconst_test_per_sample)), step=epoch)
+        experiment.log_metric("loss_validation", float('{:.4f}'.format(loss_validation_per_sample)), step=epoch)
+        experiment.log_metric("loss_class_validation", float('{:.4f}'.format(loss_validation_class_per_sample)), step=epoch)
+        experiment.log_metric("loss_kernel_validation", float('{:.4f}'.format(loss_kernel_validation_per_sample)), step=epoch)
+        experiment.log_metric("loss_fgsd_kernel_validation", float('{:.4f}'.format(loss_fgsd_kernel_validation_per_sample)), step=epoch)
+        experiment.log_metric("loss_spk_kernel_validation", float('{:.4f}'.format(loss_spk_kernel_validation_per_sample)), step=epoch)
+        experiment.log_metric("loss_adj_reconst_validation", float('{:.4f}'.format(loss_adj_reconst_validation_per_sample)), step=epoch)
 
 
 if __name__ == '__main__':
@@ -385,11 +385,11 @@ if __name__ == '__main__':
     dataset = TUDataset(data_path, name=args.dataset_name, shuffle=False, compute_graph_kernel_features=True, wl_node_labels='node_label')
     cross_val_path = os.path.join(args.data_dir, args.dataset_name, 'crossval_10fold_idx/')
     idx_train = np.loadtxt(cross_val_path + 'idx_train_split_' + str(args.crossval_split) + '.txt', dtype=np.int64)
-    idx_test = np.loadtxt(cross_val_path + 'idx_test_split_' + str(args.crossval_split) + '.txt', dtype=np.int64)
+    idx_validation = np.loadtxt(cross_val_path + 'idx_validation_split_' + str(args.crossval_split) + '.txt', dtype=np.int64)
     train_dataset = dataset[idx_train]
-    test_dataset = dataset[idx_test]
+    validation_dataset = dataset[idx_validation]
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, batch_prep_func=batch_prep_input)
-    test_loader = DataLoader(test_dataset, batch_size=args.batch_size, shuffle=True, batch_prep_func=batch_prep_input)
+    validation_loader = DataLoader(validation_dataset, batch_size=args.batch_size, shuffle=True, batch_prep_func=batch_prep_input)
 
     num_train_samples = len(train_dataset)
     num_features = dataset.num_features
@@ -397,7 +397,7 @@ if __name__ == '__main__':
     device = torch.device('cuda', args.gpu_device)
 
     if args.use_spk_features:
-        spk_path = os.path.join(args.data_dir, args.dataset_name, args.dataset_name + '_K_shortest_path.npy')
+        spk_path = os.path.join(args.data_dir, args.dataset_name, args.dataset_name + '_K_shorvalidation_path.npy')
         spk_kernel = np.load(spk_path)
     if args.use_fgsd_features:
         fgsd_path = os.path.join(args.data_dir, args.dataset_name, args.dataset_name + '_K_fgsd.npy')
@@ -430,9 +430,9 @@ if __name__ == '__main__':
     else:
         logging.info('Training from scratch... ')
 
-    best_test_loss = 1e10
-    best_acc_test = 0.0
-    best_acc_test_loss = 0.0
+    best_validation_loss = 1e10
+    best_acc_validation = 0.0
+    best_acc_validation_loss = 0.0
     for epoch in range(args.num_epochs):
 
         train_per_epoch()
