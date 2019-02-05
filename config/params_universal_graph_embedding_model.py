@@ -31,4 +31,3 @@ for key, val in hyperparams_grid.items():
     gen_params_set = gen_params_set * len(val)
 
 params_list = list(ParameterSampler(hyperparams_grid, n_iter=gen_params_set))
-params_list = sorted(params_list, key=lambda k: k['crossval_split'])
