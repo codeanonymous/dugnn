@@ -346,7 +346,7 @@ if __name__ == '__main__':
     parser.add_argument('--use_adj_reconst_loss', type=lambda x: (str(x).lower() == 'true'), default=False)
     parser.add_argument('--use_adaptive_kernel_loss', type=lambda x: (str(x).lower() == 'true'), default=True)
     parser.add_argument('--use_svm_classifier', type=lambda x: (str(x).lower() == 'true'), default=False)
-    parser.add_argument('--lambda_class_reg', type=float, default=10.0)
+    parser.add_argument('--lambda_class_reg', type=float, default=1.0)
     parser.add_argument('--lambda_kernel_reg', type=float, default=1.0)
     parser.add_argument('--lambda_fgsd_kernel_reg', type=float, default=1.0)
     parser.add_argument('--lambda_spk_kernel_reg', type=float, default=1.0)
