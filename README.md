@@ -3,10 +3,15 @@
 Package Requirements
 
 pytorch > 1.1.0
+
 sklearn 
+
 scipy 
+
 shutil
+
 comet_ml (optional)
+
 matlab_python (optional)
 
 ## Running main script:
