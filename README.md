@@ -1,6 +1,6 @@
 # deep-universal-graph-embedding-neural-network
 
-## Package Requirements
+## Package Requirements:
 
 pytorch
 
