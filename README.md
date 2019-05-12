@@ -12,7 +12,7 @@ shutil
 
 comet_ml (optional)
 
-matlab_python (optional)
+matlab.engine (optional)
 
 ## Running main script:
 
