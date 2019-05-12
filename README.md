@@ -2,7 +2,7 @@
 
 ## Package Requirements
 
-pytorch > 1.1.0
+pytorch
 
 sklearn 
 
