@@ -1,4 +1,4 @@
-# deep-universal-graph-embedding-neural-network
+# Learning Powerful Graph Neural Networks With Aid Of Transfer Learning
 
 ## Package Requirements:
 
